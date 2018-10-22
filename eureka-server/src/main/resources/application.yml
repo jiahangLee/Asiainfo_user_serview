@@ -1,0 +1,17 @@
+server:
+  port: 1111
+
+eureka:
+  instance:
+      hostname: localhost
+      #心跳时间间隔
+      lease-renewal-interval-in-seconds: 5
+  client:
+      register-with-eureka: false
+      fetch-registry: false
+      service-url.defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+      # 关闭保护机制
+      enable-self-preservation: false
+      #剔除失效服务间隔
+      eviction-interval-timer-in-ms: 6000

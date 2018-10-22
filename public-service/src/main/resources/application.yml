@@ -1,0 +1,40 @@
+server:
+  port: 9000
+---
+topNumber: 50
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:h2:./dsfile;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+micro-service-password: 123456
+---
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+---
+eureka:
+  instance:
+      #心跳时间间隔
+      lease-renewal-interval-in-seconds: 5
+      #Eureka服务端在收到最后一次心跳之后等待的时间上限，单位为秒，超过则剔除（客户端告诉服务端按照此规则等待自己）
+      lease-expiration-duration-in-seconds: 5
+  client:
+      service-url.defaultZone: http://10.2.22.26:9666/eureka
+  server:
+      # 关闭保护机制
+      enable-self-preservation: false
+      #剔除失效服务间隔
+      eviction-interval-timer-in-ms: 6000
+
+spring:
+  application:
+    name: public-service

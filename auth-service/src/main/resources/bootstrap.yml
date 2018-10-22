@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: auth-service
+  profiles:
+    active: dev
+
+---
+spring:
+  profiles: dev
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
+      password: 123456
+      username: user
+---
+spring:
+  profiles: docker
+  cloud:
+    config:
+      uri: http://config-service:8888
+      fail-fast: true
+      password: ${MICRO_SERVICE_PASSWORD}
+      username: user
+

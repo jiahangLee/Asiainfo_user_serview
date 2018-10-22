@@ -1,0 +1,43 @@
+
+
+server:
+  context-path: /uaa
+  port: 5000
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1024
+
+
+---
+spring:
+  profiles: dev
+
+  datasource:
+    url: jdbc:h2:./dsfile;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+---
+spring:
+  profiles: docker
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/INMDS?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: inm
+    password: In_*()123
+    testWhileIdle: true
+    validationQuery: select 1
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update

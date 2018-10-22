@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+       Copyright 2015-2016 the original author or authors.
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="relOperAuthObj">
+    <resultMap id="BaseResultMap" type="gags.service.entity.RelOperAuthObj" >
+        <id column="rel_id" property="relId" jdbcType="BIGINT" />
+        <result column="operator_id" property="operatorId"  />
+        <result column="role_id" property="roleId"  />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+        <result column="op_id" property="opId"  />
+        <result column="org_id" property="orgId"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        rel_oper_auth_obj.rel_id,
+        rel_oper_auth_obj.operator_id,
+        rel_oper_auth_obj.role_id,
+        rel_oper_auth_obj.`status`,
+        rel_oper_auth_obj.create_date,
+        rel_oper_auth_obj.modify_date,
+        rel_oper_auth_obj.op_id,
+        rel_oper_auth_obj.org_id,
+        rel_oper_auth_obj.remark
+    </sql>
+
+    <select id="query" parameterType="gags.service.entity.RelOperAuthObj" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from  operator,
+              rel_oper_auth_obj
+        <where>
+            operator.operator_id = rel_oper_auth_obj.operator_id
+            <if test="roleId != null">
+                and rel_oper_auth_obj.role_id = #{roleId}
+            </if>
+            <if test="status != null">
+                and operator.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_oper_auth_obj.status = #{status}
+            </if>
+            <if test="operatorId != null">
+                and operator.operator_id =#{operatorId}
+            </if>
+            ORDER BY
+              rel_oper_auth_obj.create_date ASC
+        </where>
+    </select>
+
+
+    <insert id="insert" parameterType="gags.service.entity.RelOperAuthObj" useGeneratedKeys="true" keyProperty="relId">
+        insert into rel_Oper_Auth_Obj(
+        rel_id,
+        operator_id,
+        role_id,
+        status,
+        create_date,
+        modify_date,
+        remark,
+        op_id,
+        org_id)
+        values (#{relId},#{operatorId},#{roleId},#{status},#{createDate},#{modifyDate},#{remark},#{opId},#{orgId});
+    </insert>
+
+    <update id="update" parameterType="gags.service.entity.RelOperAuthObj">
+        update rel_Oper_Auth_Obj
+        <trim prefix="set" suffixOverrides=",">
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate},
+            </if>
+        </trim>
+        WHERE
+          operator_id = #{operatorId}
+        <if test="roleId != null">
+           AND role_id != #{roleId}
+        </if>
+    </update>
+</mapper>

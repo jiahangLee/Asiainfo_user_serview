@@ -1,0 +1,61 @@
+
+server:
+  context-path: /accounts
+  port: 6000
+
+
+---
+spring:
+  profiles: dev
+
+  datasource:
+    url: jdbc:h2:./account;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+
+security:
+  oauth2:
+    client:
+      clientId: micro-service
+      clientSecret: ${micro-service-password}
+      accessTokenUri: http://localhost:5000/uaa/oauth/token
+      userAuthorizationUri: http://localhost:5000/uaa/oauth/authorize
+      grant-type: client_credentials
+      scope: server
+
+
+---
+spring:
+  profiles: docker
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/INMDS?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: inm
+    password: In_*()123
+    testWhileIdle: true
+    validationQuery: select 1
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+
+
+security:
+  oauth2:
+    client:
+      clientId: micro-service
+      clientSecret: ${micro-service-password}
+      accessTokenUri: http://auth-service:5000/uaa/oauth/token
+      grant-type: client_credentials
+      scope: server

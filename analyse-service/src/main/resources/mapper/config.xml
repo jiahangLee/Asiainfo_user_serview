@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+       Copyright 2015-2016 the original author or authors.
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="config">
+    <select id="areas" resultType="hashmap">
+        select * from  T_CONFIG_AREA
+    </select>
+
+    <select id="commonConfig" parameterType="hashmap" resultType="hashmap">
+        select * from ${tableName}
+    </select>
+    <select id="queryChannelGroup" parameterType="hashmap" resultType="hashmap">
+        select id,label from ${tableName}
+    </select>
+
+    <select id="queryChannel" parameterType="hashmap" resultType="hashmap">
+        select id,label from ${tableName} ORDER  BY channel_group_id,order_id
+    </select>
+
+    <select id="sectionConfig" parameterType="hashmap" resultType="java.lang.String">
+        SELECT label FROM ${tableName}
+    </select>
+
+    <select id="programConfig" parameterType="hashmap" resultType="java.lang.String">
+        SELECT label FROM ${tableName}
+    </select>
+
+    <select id="programsOfSection" parameterType="hashmap" resultType="java.lang.String">
+        SELECT b.label FROM T_CONFIG_${business}_SECTION a,T_CONFIG_${business}_PROGRAM b,T_CONFIG_${business}_SECTION_PROGRAM c
+        WHERE  a.section_id=c.section_id and b.program_id=c.program_id and a.label=#{sectionName}
+    </select>
+</mapper>

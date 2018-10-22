@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link rel="icon" href="favicon.ico"/>
+
+    <title>Dolphin-用户登录</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="resources/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="resources/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="resources/css/signin.css" rel="stylesheet"/>
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+    <script src="resources/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="resources/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container" id="greetingDiv"  style="display: none;">
+    <div  class="row">
+        <div id="greetings" class="col-md-10">
+
+        </div>
+        <div class="col-md-2">
+            <button id="logoutButton">退出</button>
+        </div>
+    </div>
+</div>
+
+<div id="loginForm" class="container" style="display: none;">
+
+    <form name="f" class="form-signin" action="login" method="post">
+        <h2 class="form-signin-heading">请登录</h2>
+        <label for="username" class="sr-only">用户名</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="Username"/>
+        <label for="password" class="sr-only">密码</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
+
+        <input id="loginButton" class="btn btn-lg btn-primary btn-block" value="登录" type="button"/>
+    </form>
+
+</div> <!-- /container -->
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="resources/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="resources/assets/js/vendor/jquery.min.js"></script>
+<script src="resources/js/main.js"></script>
+
+<script src="resources/js/sha1.js"></script>
+</body>
+</html>

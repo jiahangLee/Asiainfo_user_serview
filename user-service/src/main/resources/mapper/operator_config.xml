@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+       Copyright 2015-2016 the original author or authors.
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="operator">
+    <resultMap id="BaseResultMap" type="gags.service.entity.Operator">
+        <id column="operator_id" property="operatorId" jdbcType="BIGINT"></id>
+        <result column="operator_name" property="operatorName" jdbcType="VARCHAR"></result>
+        <result column="operator_code" property="operatorCode" jdbcType="VARCHAR"></result>
+        <result column="operator_type" property="operatorType" ></result>
+        <result column="password" property="password" jdbcType="VARCHAR"></result>
+        <result column="status" property="status"></result>
+        <result column="email" property="email" jdbcType="VARCHAR"></result>
+        <result column="phone" property="phone" jdbcType="VARCHAR"></result>
+        <result column="tel" property="tel" jdbcType="VARCHAR"></result>
+        <result column="sex" property="sex"></result>
+        <result column="birthday" property="birthday" jdbcType="TIMESTAMP"></result>
+        <result column="company" property="company" jdbcType="VARCHAR"></result>
+        <result column="department" property="department" jdbcType="VARCHAR"></result>
+        <result column="job_position" property="jobPosition" jdbcType="VARCHAR"></result>
+        <result column="fail_num" property="failNum"></result>
+        <result column="lock_status" property="lockStatus"></result>
+        <result column="pwd_status" property="pwdStatus"></result>
+        <result column="lock_note" property="lockNote" jdbcType="VARCHAR"></result>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"></result>
+        <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP"></result>
+        <result column="start_date" property="startDate" jdbcType="TIMESTAMP"></result>
+        <result column="end_date" property="endDate" jdbcType="TIMESTAMP"></result>
+        <result column="downloads" property="downloads"></result>
+        <result column="remark" property="remark" jdbcType="VARCHAR"></result>
+        <result column="EXT1" property="ext1" jdbcType="VARCHAR"></result>
+        <result column="EXT2" property="ext2" jdbcType="VARCHAR"></result>
+        <result column="EXT3" property="ext3" jdbcType="VARCHAR"></result>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"></result>
+    </resultMap>
+    <sql id="Base_Column_List">
+        operator.operator_id,
+        operator.operator_name,
+        operator.operator_code,
+        operator.operator_type,
+        operator.`password`,
+        operator.`status`,
+        operator.email,
+        operator.phone,
+        operator.tel,
+        operator.sex,
+        operator.birthday,
+        operator.company,
+        operator.department,
+        operator.job_position,
+        operator.fail_num,
+        operator.lock_status,
+        operator.pwd_status,
+        operator.lock_note,
+        operator.create_date,
+        operator.modify_date,
+        operator.start_date,
+        operator.end_date,
+        operator.downloads,
+        operator.remark,
+        operator.EXT1,
+        operator.EXT2,
+        operator.EXT3,
+        role.role_name
+    </sql>
+
+    <select id="queryOperator" parameterType="gags.service.entity.Operator" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        operator,
+        role,
+        rel_oper_auth_obj
+        <where>
+
+            operator.operator_id = rel_oper_auth_obj.operator_id
+            AND role.role_id = rel_oper_auth_obj.role_id
+
+            <if test="operatorName != null">
+                and operator_name LIKE CONCAT('%',#{operatorName},'%')
+            </if>
+            <if test="operatorId != null">
+                and operator.operator_id = #{operatorId}
+            </if>
+            <if test="operatorCode != null">
+                and operator_code = #{operatorCode}
+            </if>
+            <if test="password != null">
+                and password = #{password}
+            </if>
+            <if test="status != null">
+                and operator.status = #{status}
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_oper_auth_obj.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="query" parameterType="gags.service.entity.Operator" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List" />
+        FROM
+        operator,
+        role,
+        rel_oper_auth_obj
+        <where>
+
+            operator.operator_id = rel_oper_auth_obj.operator_id
+            AND role.role_id = rel_oper_auth_obj.role_id
+
+            <if test="operatorName != null">
+                and operator_name LIKE CONCAT('%',#{operatorName},'%')
+            </if>
+            <if test="operatorId != null">
+                and operator.operator_id = #{operatorId}
+            </if>
+            <if test="operatorCode != null">
+                and operator_code = #{operatorCode}
+            </if>
+            <if test="password != null">
+                and password = #{password}
+            </if>
+            <if test="status != null">
+                and operator.status = #{status}
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_oper_auth_obj.status = #{status}
+            </if>
+            <if test="roleId == null">
+                and rel_oper_auth_obj.role_id = -99
+            </if>
+            <if test="roleId != null">
+                and rel_oper_auth_obj.role_id IN
+                <foreach collection="roleId" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="ext1 != null">
+                and operator.EXT1 = #{ext1}
+            </if>
+            ORDER BY convert(operator.operator_name using GBK) asc
+            <if test="beginRow != null and pageSize != null">
+                limit #{beginRow},#{pageSize}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryCount" parameterType="gags.service.entity.Operator" resultType="java.lang.Integer">
+        select
+            count(operator.operator_id)
+        FROM
+            operator,
+            role,
+            rel_oper_auth_obj
+        <where>
+
+            operator.operator_id = rel_oper_auth_obj.operator_id
+            AND role.role_id = rel_oper_auth_obj.role_id
+
+            <if test="operatorName != null">
+                and operator_name LIKE CONCAT('%',#{operatorName},'%')
+            </if>
+            <if test="operatorId != null">
+                and operator.operator_id = #{operatorId}
+            </if>
+            <if test="status != null">
+                and operator.status = #{status}
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_oper_auth_obj.status = #{status}
+            </if>
+            <if test="roleId == null">
+                and rel_oper_auth_obj.role_id = -99
+
+            </if>
+            <if test="roleId != null">
+                and rel_oper_auth_obj.role_id IN
+                <foreach collection="roleId" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="ext1 != null">
+                and operator.EXT1 = #{ext1}
+            </if>
+        </where>
+    </select>
+    <insert id="insert" parameterType="gags.service.entity.Operator" useGeneratedKeys="true" keyProperty="operatorId">
+        insert into operator(
+        operator_id,
+        operator_name,
+        operator_type,
+        operator_code,
+        password,
+        status,
+        email,
+        phone,
+        tel,
+        sex,
+        birthday,
+        company,
+        department,
+        job_position,
+        fail_num,
+        lock_status,
+        pwd_status,
+        lock_note,
+        create_date,
+        modify_date,
+        start_date,
+        end_date,
+        downloads,
+        remark,
+        EXT1,
+        EXT2,
+        EXT3)
+        values (#{operatorId},#{operatorName},#{operatorType},#{operatorCode},#{password},#{status},#{email},#{phone},#{tel},#{sex},#{birthday},#{company},#{department},#{jobPosition},#{failNum},#{lockStatus},#{pwdStatus},#{lockNote},#{createDate},#{modifyDate},#{startDate},#{endDate},#{downloads},#{remark},#{ext1},#{ext2},#{ext3});
+    </insert>
+    <delete id="delete" parameterType="Long">
+        delete from operator where operator_id = #{operatorId}
+    </delete>
+    <update id="update" parameterType="gags.service.entity.Operator">
+        update operator
+        <trim prefix="set" suffixOverrides=",">
+
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="tel != null">
+                tel = #{tel},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="company != null">
+                company = #{company},
+            </if>
+            <if test="department != null">
+                department = #{department},
+            </if>
+            <if test="jobPosition != null">
+                job_position = #{jobPosition},
+            </if>
+            <if test="failNum != null">
+                fail_num = #{failNum},
+            </if>
+            <if test="lockStatus != null">
+                lock_status = #{lockStatus},
+            </if>
+            <if test="pwdStatus != null">
+                pwd_status = #{pwdStatus},
+            </if>
+            <if test="lockNote != null">
+                lock_note = #{lockNote},
+            </if>
+            <if test="createDate != null">
+                create_date = #{creatDate},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate},
+            </if>
+            <if test="downloads != null">
+                downloads = #{downloads},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="operatorName != null">
+                operator_name = #{operatorName},
+            </if>
+            <if test="operatorCode != null">
+                operator_code = #{operatorCode},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate},
+            </if>
+            <if test="operatorType != null">
+                operator_type = #{operatorType},
+            </if>
+        </trim>
+        WHERE
+        operator_id = #{operatorId}
+    </update>
+</mapper>

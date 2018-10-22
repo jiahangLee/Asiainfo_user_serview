@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+       Copyright 2015-2016 the original author or authors.
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dataReport">
+    <resultMap id="BaseResultMap" type="gags.service.entity.DataReport">
+        <id column="report_id" property="report_id" jdbcType="BIGINT"></id>
+        <result column="organize_id" property="organize_id" jdbcType="VARCHAR"></result>
+        <result column="report_name" property="report_name" jdbcType="VARCHAR"></result>
+        <result column="key_word" property="key_word" jdbcType="VARCHAR"></result>
+        <result column="report_date" property="report_date" jdbcType="VARCHAR"></result>
+        <result column="report_type" property="report_type" jdbcType="VARCHAR"></result>
+        <result column="remark" property="remark"></result>
+        <result column="operator_id" property="operator_id" jdbcType="BIGINT"></result>
+        <result column="upload_date" property="upload_date" jdbcType="TIMESTAMP"></result>
+        <result column="file_name" property="file_name" jdbcType="VARCHAR"></result>
+        <result column="file_save_name" property="file_save_name" jdbcType="VARCHAR"></result>
+        <result column="operator_name" property="operator_name" jdbcType="VARCHAR"></result>
+    </resultMap>
+    <sql id="Base_Column_List">
+        data_report.report_id,
+        data_report.organize_id,
+        data_report.report_name,
+        data_report.key_word,
+        data_report.report_date,
+        data_report.report_type,
+        data_report.remark,
+        data_report.operator_id,
+        data_report.upload_date,
+        data_report.operator_name,
+        data_report.file_name,
+        data_report.file_save_name
+    </sql>
+    <select id="queryDataReport" parameterType="gags.service.entity.DataReport" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from data_report
+        <where>
+            organize_id in (select
+            t_config_area_page.id
+            from t_config_area_page,
+            operator,
+            role,
+            rel_org_auth_obj rel_org,
+            rel_oper_auth_obj rel_oper
+            where
+            operator.operator_id = rel_oper.operator_id
+            AND role.role_id = rel_oper.role_id
+            AND role.role_id = rel_org.role_id
+            AND t_config_area_page.id = rel_org.organize_id
+
+            <if test="organize_id != null and organize_id !=''">
+                and t_config_area_page.label = #{organize_id}
+            </if>
+
+            <if test="status != null">
+                and operator.status = #{status}
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_oper.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_org.status = #{status}
+            </if>
+            <if test="operator_id != null">
+                and operator.operator_id = #{operator_id}
+            </if>
+
+            GROUP BY t_config_area_page.id
+            )
+             <if test="report_name != null and report_name !=''">
+             and    data_report.report_name LIKE CONCAT('%',#{report_name},'%')
+            </if>
+            <if test="key_word != null and key_word !=''">
+                and    data_report.key_word LIKE CONCAT('%',#{key_word},'%')
+            </if>
+            <if test="report_date != null and report_date !=''">
+                and    data_report.report_date LIKE CONCAT('%',#{report_date},'%')
+            </if>
+            <if test="report_type != null and report_type !=''">
+                and    data_report.report_type LIKE CONCAT('%',#{report_type},'%')
+            </if>
+            <if test="report_id != null and report_id !=''">
+                and    data_report.report_id =#{report_id}
+            </if>
+        </where>
+        order by data_report.report_id desc
+        <if test="beginRow != null and pageSize != null">
+            limit #{beginRow},#{pageSize}
+        </if>
+
+    </select>
+
+
+    <select id="queryCount" parameterType="gags.service.entity.DataReport" resultType="java.lang.Integer">
+        select
+       count(1)
+        from data_report
+        <where>
+            organize_id in (select
+            t_config_area_page.id
+            from t_config_area_page,
+            operator,
+            role,
+            rel_org_auth_obj rel_org,
+            rel_oper_auth_obj rel_oper
+            where
+            operator.operator_id = rel_oper.operator_id
+            AND role.role_id = rel_oper.role_id
+            AND role.role_id = rel_org.role_id
+            AND t_config_area_page.id = rel_org.organize_id
+
+            <if test="status != null">
+                and operator.status = #{status}
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_oper.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_org.status = #{status}
+            </if>
+            <if test="operator_id != null">
+                and operator.operator_id = #{operator_id}
+            </if>
+            GROUP BY t_config_area_page.id
+            )
+            <if test="report_name != null and report_name !=''">
+                and    data_report.report_name LIKE CONCAT('%',#{report_name},'%')
+            </if>
+        </where>
+    </select>
+    <insert id="insert" parameterType="gags.service.entity.DataReport" useGeneratedKeys="true" keyProperty="report_id">
+        insert into data_report(
+        report_id,
+        organize_id,
+        report_name,
+        key_word,
+        report_date,
+        report_type,
+        remark,
+        operator_id,
+        operator_name,
+        upload_date,
+        file_name,
+        file_save_name
+      )
+      values (#{report_id},#{organize_id},#{report_name},#{key_word},#{report_date},#{report_type},#{remark},#{operator_id},#{operator_name},#{upload_date},#{file_name},#{file_save_name});
+    </insert>
+    <delete id="delete" parameterType="Long">
+        delete from data_report where report_id = #{report_id}
+    </delete>
+    <update id="update" parameterType="gags.service.entity.DataReport">
+        update data_report
+        <trim prefix="set" suffixOverrides=",">
+            <if test="organize_id != null">
+                organize_id = #{organize_id},
+            </if>
+            <if test="report_name != null">
+                report_name = #{report_name},
+            </if>
+            <if test="key_word != null">
+                key_word = #{key_word},
+            </if>
+            <if test="report_date != null">
+                report_date = #{report_date},
+            </if>
+            <if test="report_type != null">
+                report_type = #{report_type},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="upload_date != null">
+                upload_date = #{upload_date},
+            </if>
+            <if test="file_name != null">
+                file_name = #{file_name},
+            </if>
+            <if test="file_save_name != null">
+                file_save_name = #{file_save_name},
+            </if>
+        </trim>
+        WHERE
+        report_id = #{report_id}
+    </update>
+</mapper>

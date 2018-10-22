@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+       Copyright 2015-2016 the original author or authors.
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dataReportLog">
+    <resultMap id="BaseResultMap" type="gags.service.entity.DataReportLog">
+        <id column="id" property="id" jdbcType="BIGINT"></id>
+        <result column="report_id" property="reportId" jdbcType="VARCHAR"></result>
+        <result column="operator_id" property="operatorId" jdbcType="INTEGER"></result>
+        <result column="download_times" property="downloadTimes" jdbcType="INTEGER"></result>
+        <result column="max_times" property="maxTimes" jdbcType="VARCHAR"></result>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"></result>
+        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"></result>
+        <result column="lock_status" property="lockStatus" jdbcType="INTEGER"></result>
+        <result column="ext1" property="ext1" jdbcType="VARCHAR"></result>
+        <result column="ext2" property="ext2" jdbcType="VARCHAR"></result>
+    </resultMap>
+    <sql id="Base_Column_List">
+        data_report_log.id,
+        data_report_log.report_id,
+        data_report_log.operator_id,
+        data_report_log.download_times,
+        max_times,
+        data_report_log.create_date,
+        data_report_log.update_date,
+        data_report_log.lock_status,
+        data_report_log.ext1,
+        data_report_log.ext2
+    </sql>
+    <select id="queryDataReportLog" parameterType="gags.service.entity.DataReportLog" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from data_report_log ,t_config_report
+        <where>
+            data_report_log.operator_id = t_config_report.operator_id
+
+            <if test="operatorId != null">
+                and data_report_log.operator_id = #{operatorId}
+            </if>
+
+            <if test="reportId != null ">
+                and data_report_log.report_id = #{reportId}
+            </if>
+
+            <if test="updateDate != null">
+                and data_report_log.update_date > #{updateDate}
+            </if>
+        </where>
+
+    </select>
+
+
+    <insert id="insert" parameterType="gags.service.entity.DataReportLog" useGeneratedKeys="true" keyProperty="id">
+        insert into data_report_log(
+        id,
+        operator_id,
+        report_id,
+        download_times,
+        create_date,
+        update_date,
+        lock_status,
+        ext1,
+        ext2
+      )
+      values (#{id},#{operatorId},#{reportId},#{downloadTimes},#{createDate},#{updateDate},#{lockStatus},#{ext1},#{ext2});
+    </insert>
+
+    <update id="update" parameterType="gags.service.entity.DataReportLog">
+        update data_report_log
+        <trim prefix="set" suffixOverrides=",">
+            <if test="operatorId != null">
+                operator_id = #{operatorId},
+            </if>
+            <if test="reportId != null">
+                report_id = #{reportId},
+            </if>
+            <if test="downloadTimes != null">
+                download_times = #{downloadTimes},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="lockStatus != null">
+                lock_status = #{lockStatus},
+            </if>
+            <if test="ext1 != null">
+                ext1 = #{ext1},
+            </if>
+            <if test="ext2 != null">
+                ext2 = #{ext2},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+</mapper>

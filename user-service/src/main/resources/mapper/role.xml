@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+       Copyright 2015-2016 the original author or authors.
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="role">
+
+    <resultMap id="BaseResultMap" type="gags.service.entity.Role" >
+        <id column="role_id" property="roleId" jdbcType="BIGINT" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+        <result column="role_type" property="roleType" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+        <result column="op_id" property="opId"  />
+        <result column="org_id" property="orgId"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+        <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+        <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+        <result column="parent_id" property="parentId"  jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        role.role_id,
+        role.role_name,
+        role.role_code,
+        role.role_type,
+        role.`status`,
+        role.remark,
+        role.create_date,
+        role.modify_date,
+        role.op_id,
+        role.org_id,
+        role.EXT1,
+        role.EXT2,
+        role.EXT3,
+        parent_id
+    </sql>
+
+    <select id="queryAuth" parameterType="gags.service.entity.Role" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from role,
+        rel_oper_auth_obj
+        <where>
+            role.role_id = rel_oper_auth_obj.role_id
+            <if test="roleName != null">
+                and role_name LIKE CONCAT('%',#{roleName},'%')
+            </if>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+            <if test="status != null">
+                and rel_oper_auth_obj.status = #{status}
+            </if>
+            <if test="operatorId != null">
+                and rel_oper_auth_obj.operator_id =#{operatorId}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="queryRoles" parameterType="gags.service.entity.Role" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from role
+        <where>
+            <if test="roleName != null">
+                and role_name LIKE CONCAT('%',#{roleName},'%')
+            </if>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="query" parameterType="gags.service.entity.Role" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from role
+        <where>
+            <if test="roleName != null">
+                and role_name LIKE CONCAT('%',#{roleName},'%')
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+            <if test="roleIds == null">
+                and role.role_id = -99
+            </if>
+            <if test="roleIds != null">
+                and role.role_id IN
+                <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="ext1 != null">
+                and role.EXT1 = #{ext1}
+            </if>
+            <if test="beginRow != null and pageSize != null">
+                limit #{beginRow},#{pageSize}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="gags.service.entity.Role" resultType="java.lang.Integer">
+        select
+          count(role.role_id)
+        from role
+        <where>
+            <if test="roleName != null">
+                and role_name LIKE CONCAT('%',#{roleName},'%')
+            </if>
+            <if test="status != null">
+                and role.status = #{status}
+            </if>
+            <if test="roleIds == null">
+                and role.role_id = -99
+            </if>
+            <if test="roleIds != null">
+                and role.role_id IN
+                <foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="ext1 != null">
+                and role.EXT1 = #{ext1}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="gags.service.entity.Role" useGeneratedKeys="true" keyProperty="roleId">
+        insert into role(
+        role_name,
+        role_code,
+        role_type,
+        `status`,
+        remark,
+        create_date,
+        modify_date,
+        op_id,
+        org_id,
+        EXT1,
+        EXT2,
+        EXT3,
+        parent_id)
+        values (#{roleName},#{roleCode},#{roleType},#{status},#{remark},#{createDate},#{modifyDate},#{opId},#{orgId},#{ext1},#{ext2},#{ext3},#{parentId});
+    </insert>
+
+    <delete id="delete" parameterType="Long">
+        delete from role where role_id = #{roleId}
+    </delete>
+
+    <update id="update" parameterType="gags.service.entity.Role">
+        update role
+        <trim prefix="set" suffixOverrides=",">
+            <if test="status != null">
+                 status = #{status},
+            </if>
+            <if test="roleName != null">
+                 role_name = #{roleName},
+            </if>
+            <if test="roleCode != null">
+                role_code = #{roleCode},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate},
+            </if>
+            <if test="roleType != null">
+                role_type = #{roleType},
+            </if>
+            <if test="opId != null">
+                op_id = #{opId},
+            </if>
+            <if test="orgId != null">
+                org_id = #{orgId}
+            </if>
+        </trim>
+        WHERE
+           role_id = #{roleId}
+    </update>
+</mapper>

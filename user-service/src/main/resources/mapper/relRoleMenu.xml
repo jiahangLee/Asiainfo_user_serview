@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+       Copyright 2015-2016 the original author or authors.
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="relRoleMenu">
+
+    <resultMap id="BaseResultMap" type="gags.service.entity.RelRoleMenu" >
+        <id column="rel_id" property="relId" jdbcType="BIGINT" />
+        <result column="role_id" property="roleId"  />
+        <result column="menu_id" property="menuId" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+        <result column="op_id" property="opId"  />
+        <result column="org_id" property="orgId"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        rel_role_menu.rel_id,
+        rel_role_menu.role_id,
+        rel_role_menu.menu_id,
+        rel_role_menu.`status`,
+        rel_role_menu.create_date,
+        rel_role_menu.modify_date,
+        rel_role_menu.op_id,
+        rel_role_menu.org_id,
+        rel_role_menu.remark
+    </sql>
+
+    <select id="query" parameterType="gags.service.entity.RelRoleMenu" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        FROM
+          rel_role_menu
+        <where>
+            <if test="roleId != null">
+                and rel_role_menu.role_id = #{roleId}
+            </if>
+            <if test="status != null">
+                and rel_role_menu.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="gags.service.entity.RelRoleMenu" useGeneratedKeys="true" keyProperty="relId">
+        insert into rel_Role_Menu(
+        rel_id,
+        role_id,
+        Menu_id,
+        status,
+        create_date,
+        modify_date,
+        remark,
+        op_id,
+        org_id)
+        values (#{relId},#{RoleId},#{MenuId},#{status},#{createDate},#{modifyDate},#{remark},#{opId},#{orgId});
+    </insert>
+
+    <update id="update" parameterType="gags.service.entity.RelRoleMenu">
+        update rel_role_menu
+        <trim prefix="set" suffixOverrides=",">
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate},
+            </if>
+            <if test="opId != null">
+                op_id = #{opId},
+            </if>
+            <if test="orgId != null">
+                org_id = #{orgId}
+            </if>
+        </trim>
+        <where>
+            <if test="menuIds != null">
+                 rel_role_menu.menu_id NOT IN
+                <foreach collection="menuIds" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="roleId != null">
+                and rel_role_menu.role_id = #{roleId}
+            </if>
+        </where>
+    </update>
+</mapper>

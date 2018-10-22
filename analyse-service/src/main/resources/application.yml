@@ -1,0 +1,120 @@
+
+server:
+  port: 9999
+  context-path: /analyses
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+
+redisInfos: 10.2.22.18:6378
+
+logging:
+  level:
+    common: TRACE
+---
+swagger:
+  enabled: true
+spring:
+  profiles: swagger-ui
+---
+spring:
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 51MB
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:h2:./dsfile;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+micro-service-password: 123456
+---
+spring:
+  profiles: dev-mysql
+  datasource:
+#    url: jdbc:mysql://10.2.22.14:3306/yaxin?useSSL=false&useUnicode=true&characterEncoding=utf-8
+#    username: yaxin
+#    password: GuoanYaxin123
+#    testWhileIdle: true
+#    validationQuery: select 1
+
+#    url: jdbc:mysql://10.254.15.61:3306/zxga_analyse?useSSL=false&useUnicode=true&characterEncoding=utf-8
+#    username: yaxin
+#    password: yaxin315
+#    testWhileIdle: true
+#    validationQuery: select 1
+
+#    url: jdbc:mysql://localhost:3306/zxga_analyse?useSSL=false&useUnicode=true&characterEncoding=utf-8
+#    username: root
+#    password: 123456
+#    testWhileIdle: true
+#    validationQuery: select 1
+#
+    url: jdbc:mysql://10.2.22.14:3306/zxga_analyse?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: yaxin
+    password: GuoanYaxin123
+    testWhileIdle: true
+    validationQuery: select 1
+
+#    url: jdbc:mysql://10.2.22.16:3306/zxga_analyse?useSSL=false&useUnicode=true&characterEncoding=utf-8
+#    username: yaxin
+#    password: GuoanYaxin123
+#    testWhileIdle: true
+#    validationQuery: select 1
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+
+micro-service-password: 123456
+
+
+---
+spring:
+  profiles: docker
+  datasource:
+    url: jdbc:mysql://mysql:3306/INMDS?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: inm
+    password: In_*()123
+    testWhileIdle: true
+    validationQuery: select 1
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+
+micro-service-password: ${MICRO-SERVICE-PASSWORD}
+---
+eureka:
+  instance:
+      #心跳时间间隔
+      lease-renewal-interval-in-seconds: 5
+      #Eureka服务端在收到最后一次心跳之后等待的时间上限，单位为秒，超过则剔除（客户端告诉服务端按照此规则等待自己）
+      lease-expiration-duration-in-seconds: 5
+  client:
+      service-url.defaultZone: http://10.2.22.26:1111/eureka
+
+  server:
+      # 关闭保护机制
+      enable-self-preservation: false
+      #剔除失效服务间隔
+      eviction-interval-timer-in-ms: 6000
+
+spring:
+  application:
+    name: analyse-service

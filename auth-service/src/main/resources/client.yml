@@ -1,0 +1,39 @@
+clients:
+  - clientId: OPS-SERVICE
+    resourceIds:
+      - OPS-U4A-USERS
+    isSecretRequired: true
+    clientSecret: OPS-SERVICE-SECRET
+    isScoped: true
+    scope:
+      - openid
+    authorizedGrantTypes:
+      - authorization_code
+      - refresh_token
+    registeredRedirectUri:
+
+    authorities:
+      - ROLE_TRUSTED_CLIENT
+    accessTokenValiditySeconds:
+    refreshTokenValiditySeconds:
+    isAutoApprove: false
+    additionalInformation:
+  - clientId: Android
+    resourceIds:
+      - OPS-U4A-USERS
+    isSecretRequired: true
+    clientSecret: android-ops
+    isScoped: true
+    scope:
+      - openid
+    authorizedGrantTypes:
+      - password
+      - refresh_token
+    registeredRedirectUri:
+
+    authorities:
+      - ROLE_TRUSTED_CLIENT
+    accessTokenValiditySeconds:
+    refreshTokenValiditySeconds:
+    isAutoApprove: false
+    additionalInformation:

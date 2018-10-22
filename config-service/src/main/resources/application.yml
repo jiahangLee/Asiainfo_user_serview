@@ -1,0 +1,35 @@
+
+
+server:
+  port: 8888
+spring:
+  profiles:
+    active: native,dev
+---
+
+
+spring:
+  profiles: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/shared,classpath:/serviceConfig
+
+---
+spring:
+  profiles: dev
+security:
+  user:
+    password: 123456
+
+---
+
+
+
+spring:
+  profiles: docker
+
+security:
+  user:
+    password: ${MICRO_SERVICE_PASSWORD}
